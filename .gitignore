@@ -1,3 +1,6 @@
+# Ignore all excel file
+*.xlsx
+
 # History files
 .Rhistory
 .Rapp.history
