@@ -20,7 +20,7 @@ COVID <- function(t, statev, parms){
     dHtddt <-  (1-ps)*pt*epsilon*V - mu*Htd
     dRdt <- eta*Ia + sigma*M + gamma*Hts
     dCMdt <- mu*Htd + nu*Nt
-    dAtd <- pt*epsilon*V
+    dAdt <- pt*epsilon*V
     
     list(c(dSdt, dIadt, dIsdt, dMdt, dVdt, dNtdt, dHtsdt, dHtddt, dRdt, dCMdt, dAdt))
     

@@ -10,6 +10,7 @@ pp <- read_excel("sars_cov2_par.xlsx", sheet = "sars_cov2_par")
 
 parm_values <- pp$Value
 names(parm_values) <- pp$Code
+parm_values <- parm_values[1:13]
 
 ## State variables
 
@@ -64,7 +65,7 @@ state_var <- c(S = N0-1,
 
 ## Time interval
 
-time_seq <- seq(0, 356, 1)
+time_seq <- seq(0, 365, 1)
 
 ## Run the model to calculate cumulative
 
@@ -113,7 +114,7 @@ new_df <- cbind(new_vals, cm = cm_res)
 #filter according to the know drug base line
 # We have duration of stay and probability of surviving
 
-no_of_beds <- 160
+no_of_beds <- 20
 
 treat_area<- c(
   xmin = c(.68), xmax = c(.88),
@@ -144,9 +145,9 @@ baseline_cm <- function(bed_cap, psb = .75, dub = 15 )new_df %>%
   + geom_contour(breaks = c(min(new_df$cm),baseline_cm(200)$cm, max(new_df$cm)),
                  data = new_df[new_df$cc == 200,])
   + lims(x = c(0,1))
-  + geom_point(data = baseline_cm(bed_capacity), size = 5, col = "red")
+  + geom_point(data = baseline_cm(bed_capacity), size = 2, col = "red")
   + geom_hline(aes(yintercept = du), data = baseline_cm(bed_capacity))
-  + geom_vline(aes(xintercept = ps), data = baseline_cm(bed_capacity))
+  #+ geom_vline(aes(xintercept = ps), data = baseline_cm(bed_capacity))
 )
 
 #######################################
