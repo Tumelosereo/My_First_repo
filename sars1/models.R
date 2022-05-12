@@ -6,11 +6,11 @@ library(readxl)
 
 # Source the functions script
 
-source("./functions.R", local = TRUE)
+source("./sars1/functions.R", local = TRUE)
 
 # Read Parameter values for SARS Cov 2.
 
-pp <- read_excel("./ebola_par.xlsx", sheet = "ebola_par")
+pp <- read_excel("./sars1/sars_cov1_par.xlsx", sheet = "sars_cov1_par")
 
 # Extract only values from the Data Frame
 
@@ -64,7 +64,14 @@ new_vals <- expand.grid(
   cc =  seq(20, 300, 20)
 )
 
+# Run the model to produce all rates from the COVID
 
+out <- run_covid(
+  t = time_seq,
+  pp = parm_values,
+  vals = c(ps=.65, du = 10, cc = 20),
+  statev = state_var, ret_cm = FALSE
+)
 
 # Save simulation output
 
@@ -81,8 +88,8 @@ run_covid(
 
 ## Calculating Cumulative Mortality for all values of (new_vals)
 
-if (file.exists("./cm_res.RData")) {
-  load("./cm_res.RData")
+if (file.exists("./sars1/cm_res.RData")) {
+  load("./sars1/cm_res.RData")
 } else {
   cm_res <- sapply(1:nrow(new_vals), function(ii) {
     run_covid(
@@ -92,7 +99,7 @@ if (file.exists("./cm_res.RData")) {
       statev = state_var
     )
   })
-  save(cm_res, file = "./cm_res.RData")
+  save(cm_res, file = "./sars1/cm_res.RData")
 }
 
 
@@ -101,16 +108,7 @@ if (file.exists("./cm_res.RData")) {
 
 new_df <- cbind(new_vals, cm = cm_res)
 
-save(new_df, file = "./new_df.RData")
-
-# Run the model to produce all rates from the COVID
-
-out <- run_covid(
-  t = time_seq,
-  pp = parm_values,
-  vals = c(ps=.75, du = 15, cc = 20),
-  statev = state_var, ret_cm = FALSE
-)
+save(new_df, file = "./sars1/new_df.RData")
 
 # Plot the simulation output for Ebola
 # Make the data(out) long and plot according to the states.
@@ -130,7 +128,7 @@ model_out <- (ggplot(new_out)
                   x = "Time(days)"
                   , y = "Population"
                   #, title = "Probability of surviving is 75%, 12 days of hospitalization
-                   # with 20 available beds in population of 150000 individuals."
+                   # with 20 availabe beds in population of 150000 individuals."
                 )
               +
                 facet_wrap(~States, scales = "free") 
@@ -181,7 +179,7 @@ plot1 <- (ggplot()
           
 )
 
-print(plot1)
+
 #######################################################
 #filter according to the know drug base line
 # We have duration of stay and probability of surviving
